@@ -1,0 +1,71 @@
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.general {
+    padding: 30px;
+    width: 300px;
+    text-align: center;
+    background-color: #cfe2f3;
+    border-radius: 30px;
+    border: 1px solid #000;
+}
+
+
+.listaProd > p {
+    font-size: 10px;
+    text-align: left;
+}
+
+.cabecera a{
+    margin: 5px;
+    color: #000;
+    font-weight: bold;
+}
+
+.productoPrincip {
+    display: flex;
+    height: 30px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.productoPrincip a {
+    text-align: left;
+}
+
+.mitad {
+    width: 50%;
+    display: flex;
+    text-align: left;
+}
+
+.uno {
+    width: 95%;
+}
+
+.dos {
+    display: flex;
+    align-items: right;
+    justify-content: right;
+}
+
+
+.formRow {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: auto;
+    margin-bottom: 10px;
+    max-width: 300px;
+    }
+    .formRow:first-child {
+    margin-top: 25px;
+    }
+    .formRow:last-child {
+    justify-content: flex-end;
+    }
+    

@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
+        <link href="/style.css" rel="stylesheet">
+        <title>Formulari</title>
+    </head>
+    <body>
+        <div class="general">
+            <form method="post" action="/addItem" enctype="multipart/form-data">
+                <h1>Añadir nuevo producto:</h1>
+                <div class="formRow">Nombre: <input type="text" name="nombre" /></div>
+                <div class="formRow">Precio: <input type="text" name="precio" /></div>
+                <div class="formRow">Descripción: <textarea type="text" name="descripcion"></textarea></div>
+                <div class="formRow">Imatge:
+                <input type="file" name="files" accept="img/*">
+                </div>
+                <div class="formRow"><input type="submit" value="Añadir"></div>
+            </form>
+        </div>
+    </body>
+</html>
