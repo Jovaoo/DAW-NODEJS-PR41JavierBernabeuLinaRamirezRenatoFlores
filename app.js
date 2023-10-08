@@ -8,6 +8,12 @@ const multer = require('multer')
 const { v4: uuidv4 } = require('uuid')
 const storage = multer.memoryStorage() 
 const upload = multer({ storage: storage })
+const bodyParser = require('body-parser');
+
+
+// Configura body-parser para analizar datos JSON y datos de formularios
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
 // Configurar direcció ‘/’ 
@@ -178,6 +184,7 @@ app.get('/edit/:id', async (req, res) => {
 app.post('/edit/:id', async (req, res) => {
   const idToEdit = parseInt(req.params.id);
   const updatedData = req.body; // Obtenemos los datos enviados en el formulario
+
   
   try {
     // Leer el archivo JSON
@@ -206,6 +213,61 @@ app.post('/edit/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.send('Error al actualizar los datos');
+  }
+});
+
+//delete
+
+app.get('/delete/:id', async (req, res) => {
+  const idToDelete = parseInt(req.params.id);
+  
+  try {
+    // Llegir el fitxer JSON
+    let dadesArxiu = await fs.readFile("./private/productes.json", { encoding: 'utf8' })
+    let dades = JSON.parse(dadesArxiu)
+    
+    // Buscar el producto por su ID
+    let deleteItem = dades.find(producto => producto.id === idToDelete);
+    
+    if (deleteItem) {
+
+      // Renderizar la vista de edición y pasar los datos del producto
+      res.render('sites/deleteItem', { producto: deleteItem });
+    } else {
+      res.status(404).send('Producto no encontrado');
+    }
+  } catch (error) {
+    console.error(error);
+    res.send('Error al leer el archivo JSON');
+  }
+});
+
+app.post('/delete/:id', async (req, res) => {
+  const idToDelete = parseInt(req.params.id);
+
+  try {
+    // Leer el archivo JSON
+    let dadesArxiu = await fs.readFile("./private/productes.json", { encoding: 'utf8' });
+    let dades = JSON.parse(dadesArxiu);
+
+    // Encontrar el índice del producto a eliminar
+    const indexToDelete = dades.findIndex(producto => producto.id === idToDelete);
+
+    if (indexToDelete !== -1) {
+      dades.splice(indexToDelete, 1);
+
+      
+      let textDades = JSON.stringify(dades, null, 4);
+      await fs.writeFile("./private/productes.json", textDades, { encoding: 'utf8' });
+
+      
+      res.redirect('/confirmacionEliminacion');
+    } else {
+      res.status(404).send('Producto no encontrado');
+    }
+  } catch (error) {
+    console.error(error);
+    res.send('Error al eliminar el producto');
   }
 });
 

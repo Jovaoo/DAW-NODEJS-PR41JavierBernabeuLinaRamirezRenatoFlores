@@ -1,0 +1,7 @@
+<div class="formRow">Nombre: <%= producto.nombre || '' %></div>
+    <div class="formRow">Precio: <%= producto.precio || '' %></div>
+    <div class="formRow">Descripción: <%= producto.descripcion || '' %></div>
+    <div class="formRow">Imagen: <%= producto.imagen %></div>
+    <form action="/delete/<%= producto.id %>" method="post">
+        <input type="submit" value="Confirmar Eliminación">
+    </form>
