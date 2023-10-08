@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const port = 3000
 const url = require('url')
 const ejs = require('ejs')
 const fs = require('fs/promises')
@@ -7,7 +8,7 @@ const multer = require('multer')
 const { v4: uuidv4 } = require('uuid')
 const storage = multer.memoryStorage() 
 const upload = multer({ storage: storage })
-const port = 3000
+
 
 // Configurar direcció ‘/’ 
 
@@ -61,16 +62,17 @@ async function getSearch (req, res) {
     let dades = JSON.parse(dadesArxiu)
     if (query.country) {
       // 'noms' conté un array amb els noms de les naus
-      noms = llista.map(producto => { return producto.nombre })
-      res.render('sites/search', { llista: noms })
+      noms = dades.map(producto => ({ id: producto.id, nombre: producto.nombre }));
+      res.render('sites/search', { llista: noms });
     } else if (query.word) {
-      llista = dades.filter(producto => ((producto.descripcion).toLowerCase().indexOf(query.word.toLocaleLowerCase()) != -1))
-      noms = llista.map(producto => { return producto.nombre })
+      noms = dades
+        .filter(producto => producto.descripcion.toLowerCase().includes(query.word.toLowerCase()))
+        .map(producto => ({ id: producto.id, nombre: producto.nombre }));
       res.render('sites/search', { llista: noms })
     } else {
       // 'noms' conté un array amb els noms de totes les naus ‘
-      noms = dades.map(producto => { return producto.nombre })  
-      res.render('sites/search', { llista: noms })
+      noms = dades.map(producto => ({ id: producto.id, nombre: producto.nombre }));
+      res.render('sites/search', { llista: noms });
     }
     } catch (error) {
     console.error(error)
@@ -145,11 +147,69 @@ async function getPostObject (req) {
     resolve(objPost)
     })  
 }
+//******************************************************************* */
 
+//edit
 
+app.get('/edit/:id', async (req, res) => {
+  const idToEdit = parseInt(req.params.id);
   
+  try {
+    // Llegir el fitxer JSON
+    let dadesArxiu = await fs.readFile("./private/productes.json", { encoding: 'utf8' })
+    let dades = JSON.parse(dadesArxiu)
+    
+    // Buscar el producto por su ID
+    let editItem = dades.find(producto => producto.id === idToEdit);
+    
+    if (editItem) {
 
-app.get('/edit', editItem)
+      // Renderizar la vista de edición y pasar los datos del producto
+      res.render('sites/editItem', { producto: editItem });
+    } else {
+      res.status(404).send('Producto no encontrado');
+    }
+  } catch (error) {
+    console.error(error);
+    res.send('Error al leer el archivo JSON');
+  }
+});
+
+app.post('/edit/:id', async (req, res) => {
+  const idToEdit = parseInt(req.params.id);
+  const updatedData = req.body; // Obtenemos los datos enviados en el formulario
+  
+  try {
+    // Leer el archivo JSON
+    let dadesArxiu = await fs.readFile("./private/productes.json", { encoding: 'utf8' });
+    let dades = JSON.parse(dadesArxiu);
+    
+    // Buscar el producto por su ID
+    const editItem = dades.find(producto => producto.id === idToEdit);
+    
+    if (editItem) {
+      // Actualiza los datos del producto con los datos enviados en el formulario
+      editItem.nombre = updatedData.nombre;
+      editItem.precio = updatedData.precio;
+      editItem.descripcion = updatedData.descripcion;
+      editItem.imagen = updatedData.imagen;
+      
+      // Guarda los datos actualizados de vuelta en el archivo JSON
+      let textDades = JSON.stringify(dades, null, 4);
+      await fs.writeFile("./private/productes.json", textDades, { encoding: 'utf8' });
+      
+      // Redirige a la página de detalle del producto actualizado
+      res.redirect('/item?id=' + idToEdit);
+    } else {
+      res.status(404).send('Producto no encontrado');
+    }
+  } catch (error) {
+    console.error(error);
+    res.send('Error al actualizar los datos');
+  }
+});
+
+/*app.get('/edit', editItem)
 async function editItem (req, res) {
   let query = url.parse(req.url, true).query;
   let noms = []
@@ -159,7 +219,7 @@ async function editItem (req, res) {
     let dades = JSON.parse(dadesArxiu)
     if (query.country) {
       // 'noms' conté un array amb els noms de les naus
-      noms = llista.map(producto => { return producto.nombre })
+      noms = dades.map(producto => { return producto.nombre })
 
       res.render('sites/search', { llista: noms })
     } else if (query.word) {
@@ -175,4 +235,4 @@ async function editItem (req, res) {
     console.error(error)
     res.send('Error al llegir el fitxer JSON')
   }
-  }
+  }*/
