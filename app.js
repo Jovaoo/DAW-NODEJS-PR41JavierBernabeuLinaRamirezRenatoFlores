@@ -199,7 +199,7 @@ app.post('/edit/:id', async (req, res) => {
       editItem.nombre = updatedData.nombre;
       editItem.precio = updatedData.precio;
       editItem.descripcion = updatedData.descripcion;
-      editItem.imagen = updatedData.imagen;
+      editItem.imagen = updatedData.img;
       
       // Guarda los datos actualizados de vuelta en el archivo JSON
       let textDades = JSON.stringify(dades, null, 4);
@@ -261,7 +261,7 @@ app.post('/delete/:id', async (req, res) => {
       await fs.writeFile("./private/productes.json", textDades, { encoding: 'utf8' });
 
       
-      res.redirect('/confirmacionEliminacion');
+      res.redirect('/');
     } else {
       res.status(404).send('Producto no encontrado');
     }

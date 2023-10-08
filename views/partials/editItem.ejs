@@ -6,8 +6,9 @@
     <div class="formRow">Nombre: <input type="text" name="nombre" value="<%= producto.nombre || '' %>"/></div>
     <div class="formRow">Precio: <input type="text" name="precio" value="<%= producto.precio || '' %>"/></div>
     <div class="formRow">Descripción: <textarea type="text" name="descripcion"><%= producto.descripcion || '' %></textarea></div>
-    <div class="formRow">Imagen:
-        <input type="file" name="files" accept="img/*" value="<%= producto.imagen || '' %>">
+    <div class="formRow" style="display: flex;flex-direction: column;">Imagen:
+        <img src="../../<%= producto.img %>" alt="" width="75%" height="75%">
+        <input type="file" name="files" accept="img/*" value="<%= producto.img || '' %>">
     </div>
     <div class="formRow"><input type="submit" value="Guardar Cambios"></div>
 </form>
